@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #-*- coding: iso-8859-1 -*-
 #  important line for string encoding
 
@@ -242,4 +242,6 @@ while 1:
 	time.sleep(10)
 
 #create Secret
+#secret_key = base64.b32encode(b'1234567890')
+#print(secret_key)
 #take a 10 bytes string, do a base32 encode, get 16 Characters
