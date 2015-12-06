@@ -1,0 +1,7 @@
+{
+ "bot_token": "<secret telegram bot token>", 
+ "secret": "<secret HMAC key>", 
+ "bot_name": "<@mybot from botfather>",
+ "authorized_chats": { }
+ }
+}
