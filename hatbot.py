@@ -8,12 +8,18 @@ import sys
 import time
 import telepot
 import json
+import signal
 import hmac, base64, struct, hashlib, time
 
 
 last_processed = 0		
 last_auth_key = u""			
 last_auth_attepmt = 0
+
+def sigterm_handler(_signo, _stack_frame):
+    # Raises SystemExit(0):
+    sys.exit(0)
+
 
 def handle(msg):
 	global authorized_chats
@@ -92,7 +98,7 @@ def handle(msg):
 			#chat is authorized
 			else:
 				hide_keyboard = {'hide_keyboard': True}
-				print(command)
+				log(command)
 
 				if command.startswith("/auth "):
 					bot.sendMessage(chat_id, "`already authorized`", parse_mode="Markdown")
@@ -163,6 +169,15 @@ def shout(message):
 		for chat_id in config["authorized_chats"].keys():
 			bot.sendMessage(chat_id, message, parse_mode="Markdown", reply_markup=simple_keyboard)
 
+def log(message, new_line=False):
+	tstring = time.strftime("%H:%M, %d.%m.%Y")
+	if new_line:
+		print("\n#################\n" + tstring + "\t" + message + "\n")
+	else:
+		print(tstring + "\t" + message)
+
+
+
 ######################################## /home automation section\ ####################################
 def home_command(command, chat_id):
 	global last_processed
@@ -228,13 +243,16 @@ json_input = file.read()
 config = json.loads(json_input)
 file.close()
 
+# Setting up sigterm handler
+signal.signal(signal.SIGTERM, sigterm_handler)
+
 # Setting up the bot
 bot = telepot.Bot(config["bot_token"])
 
 shout('`restarted ...`')
 
 bot.notifyOnMessage(handle)
-print('Listening ...')
+log('Listening ...', True)
 
 
 # Keep the program running.
